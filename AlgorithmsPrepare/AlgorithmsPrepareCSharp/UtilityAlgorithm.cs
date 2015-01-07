@@ -25,7 +25,7 @@ namespace AlgorithmsPrepareCSharp
             }
 
             int ranPos = new Random().Next(startIndex, endIndex + 1);
-            Swap(array, ranPos, endIndex);
+            array.Swap(ranPos, endIndex);
             int firstHigh = startIndex;
             int i = firstHigh;
             T pivot = array[endIndex];
@@ -35,7 +35,7 @@ namespace AlgorithmsPrepareCSharp
                 Swap(array, i, firstHigh);
                 ++firstHigh;
             }
-            Swap(array, firstHigh, endIndex);
+            array.Swap(firstHigh, endIndex);
 
             QuickSort(array, startIndex, firstHigh - 1);
             QuickSort(array, firstHigh + 1, endIndex);

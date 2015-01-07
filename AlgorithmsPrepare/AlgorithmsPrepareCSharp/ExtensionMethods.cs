@@ -23,5 +23,35 @@ namespace AlgorithmsPrepareCSharp
         {
             return stack.Count == 0;
         }
+
+        public static void ReverseArray<TItem>(this TItem[] array)
+        {
+            if (array.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            int i, j;
+            for (i = 0, j = array.Length - 1; i < j; ++i, --j)
+            {
+                TItem temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        public static void Swap<TItem>(this TItem[] array, int first, int second)
+        {
+            var temp = array[first];
+            array[first] = array[second];
+            array[second] = temp;
+        }
+
+        public static void Swap<TItem>(this IList<TItem> array, int first, int second)
+        {
+            var temp = array[first];
+            array[first] = array[second];
+            array[second] = temp;
+        }
     }
 }
