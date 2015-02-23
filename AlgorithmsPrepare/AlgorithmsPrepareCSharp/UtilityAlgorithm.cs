@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AlgorithmsPrepareCSharp
 {
-    internal class UtilityAlgorithm
+    class UtilityAlgorithm
     {
         public static void Swap<T>(IList<T> array, int firstIndex, int secondIndex) where T: struct
         {
@@ -35,7 +35,7 @@ namespace AlgorithmsPrepareCSharp
                 Swap(array, i, firstHigh);
                 ++firstHigh;
             }
-            array.Swap(firstHigh, endIndex);
+            Swap(array, firstHigh, endIndex);
 
             QuickSort(array, startIndex, firstHigh - 1);
             QuickSort(array, firstHigh + 1, endIndex);

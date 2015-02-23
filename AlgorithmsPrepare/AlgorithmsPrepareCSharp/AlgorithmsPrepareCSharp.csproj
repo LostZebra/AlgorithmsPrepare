@@ -42,12 +42,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="HackerRank.cs" />
     <Compile Include="Kmp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RMQ.cs" />
-    <Compile Include="TC.cs" />
+    <Compile Include="Rmq.cs" />
+    <Compile Include="SuffixTree.cs" />
+    <Compile Include="Tc.cs" />
     <Compile Include="Tree.cs" />
+    <Compile Include="UnionSet.cs" />
     <Compile Include="UtilityAlgorithm.cs" />
   </ItemGroup>
   <ItemGroup>

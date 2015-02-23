@@ -3,39 +3,34 @@ using System.Collections.Generic;
 
 namespace AlgorithmsPrepareCSharp
 {
-    class Tree<TItem> where TItem : struct, IComparable<TItem>
+    public class Tree<TItem> where TItem : struct, IComparable<TItem>
     {
         private readonly TItem _data;
         public TItem Data {
             get { return this._data; }
         }
 
-        private readonly Tree<TItem> _left;
-        public Tree<TItem> Left {
-            get { return this._left; }
-        }
+        public Tree<TItem> Left { get; set; }
 
-        private readonly Tree<TItem> _right;
-        public Tree<TItem> Right {
-            get { return this._right; }
-        }
+        public Tree<TItem> Right { get; set; }
 
         public Tree()
         {
             this._data = default(TItem);
-            this._left = null;
-            this._right = null;
+            this.Left = null;
+            this.Right = null;
         }
 
         public Tree(TItem data, Tree<TItem> left = null, Tree<TItem> right = null)
         {
             this._data = data;
-            this._left = left;
-            this._right = right;
+            this.Left = left;
+            this.Right = right;
         }
 
         public Tree<TItem> InsertWithRecursion(Tree<TItem> root, TItem nodeData)
         {
+            /*
             if (root == null)
             {
                 return new Tree<TItem>(nodeData);
@@ -44,6 +39,30 @@ namespace AlgorithmsPrepareCSharp
             return nodeData.CompareTo(root.Data) <= 0 ? 
                 new Tree<TItem>(root.Data, InsertWithRecursion(root.Left, nodeData), root.Right) 
                 : new Tree<TItem>(root.Data, root.Left, InsertWithRecursion(root.Right, nodeData));
+            */
+            Tree<TItem> parNode = null;
+            Tree<TItem> curNode = root;
+
+            while (curNode != null)
+            {
+                parNode = curNode;
+                curNode = nodeData.CompareTo(curNode.Data) <= 0 ? curNode.Left : curNode.Right;
+            }
+            if (parNode == null)
+            {
+                root = new Tree<TItem>(nodeData);
+                return root;
+            }
+
+            if (nodeData.CompareTo(parNode.Data) <= 0)
+            {
+                parNode.Left = new Tree<TItem>(nodeData);
+            }
+            else
+            {
+                parNode.Right = new Tree<TItem>(nodeData);
+            }
+            return root;
         }
 
         public static IEnumerable<TItem> InorderTraverseWithRecursion(Tree<TItem> root)
@@ -119,8 +138,8 @@ namespace AlgorithmsPrepareCSharp
                 Console.WriteLine("Node data type is: {0}, its value is: {1}", root.Data.GetType(), root.Data);
                 if (root.Left != null)
                 {
-                    nodeStack.Push(root.Left);
                     root = root.Left;
+                    nodeStack.Push(root);
                 }
                 else
                 {
