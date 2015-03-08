@@ -45,6 +45,7 @@
     <Compile Include="Graph.cs" />
     <Compile Include="HackerRank.cs" />
     <Compile Include="Kmp.cs" />
+    <Compile Include="LeetCode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rmq.cs" />
