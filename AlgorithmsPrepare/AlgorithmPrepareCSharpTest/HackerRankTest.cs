@@ -7,13 +7,13 @@ namespace AlgorithmPrepareCSharpTest
     public class HackerRankTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestFindLcs()
         {
             HackerRank.DoNothing();
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void TestAddStr()
         {
             HackerRank.DoNothing();
         }

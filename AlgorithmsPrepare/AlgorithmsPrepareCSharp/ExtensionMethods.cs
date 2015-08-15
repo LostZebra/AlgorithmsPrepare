@@ -125,5 +125,12 @@ namespace AlgorithmsPrepareCSharp
             }
             return SelectionRank(array, rank, start, firstHigh - 1);
         }
+
+        public static string Reverse(this string s)
+        {
+            var tmpCharArray = s.ToCharArray();
+            Array.Reverse(tmpCharArray);
+            return new string(tmpCharArray);
+        }
     }
 }

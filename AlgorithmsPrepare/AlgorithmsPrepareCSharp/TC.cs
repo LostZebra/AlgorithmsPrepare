@@ -6,7 +6,8 @@ namespace AlgorithmsPrepareCSharp
 {
     public class Tc
     {
-        private static readonly Tc TcInstance = new Tc();
+        private static Tc _tcInstance;
+        private static readonly object LockObj = new object();
 
         private Tc()
         {
@@ -15,7 +16,14 @@ namespace AlgorithmsPrepareCSharp
 
         public static Tc GetInstance()
         {
-            return TcInstance;
+            lock (LockObj)
+            {
+                if (_tcInstance == null)
+                {
+                    _tcInstance = new Tc();
+                }
+            }
+            return _tcInstance;
         }
 
         /*

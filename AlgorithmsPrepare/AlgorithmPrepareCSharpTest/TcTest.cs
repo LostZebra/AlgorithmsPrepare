@@ -7,7 +7,7 @@ namespace AlgorithmPrepareCSharpTest
     public class TcTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestMinPathSum()
         {
             Tc tc = Tc.GetInstance();
             int[] test1 = {19, 50, 10, 39, 12, 4, 3, 2, 2, 1};
@@ -30,7 +30,7 @@ namespace AlgorithmPrepareCSharpTest
         }
 
         [TestMethod]
-        public void GeneralTestMethod()
+        public void TestSuffixTree()
         {
             const string testStr = "Thisisabeautifulworld";
             SuffixTree tree = new SuffixTree(testStr);

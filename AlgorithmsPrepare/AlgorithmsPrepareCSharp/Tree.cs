@@ -124,35 +124,40 @@ namespace AlgorithmsPrepareCSharp
             PreorderTraverseWithRecursion(root.Right);
         }
 
-        public static void PreorderTraverseWithoutRecursion(Tree<TItem> root)
+        public static IEnumerable<Tree<TItem>> PreorderTraverseWithoutRecursion(Tree<TItem> root)
         {
             if (root == null)
             {
-                return;
+                yield return null;
             }
 
             Stack<Tree<TItem>> nodeStack = new Stack<Tree<TItem>>();
             nodeStack.Push(root);
+            
             while (!nodeStack.IsEmpty())
             {
-                Console.WriteLine("Node data type is: {0}, its value is: {1}", root.Data.GetType(), root.Data);
-                if (root.Left != null)
+                var topNode = nodeStack.Peek();
+                
+                // This is where preorder traverse happened
+                yield return topNode;
+                
+                while (topNode.Left != null)
                 {
-                    root = root.Left;
-                    nodeStack.Push(root);
+                    topNode = topNode.Left;
+                    nodeStack.Push(topNode);
                 }
-                else
+                while (nodeStack.Count != 0)
                 {
-                    Tree<TItem> topNode = nodeStack.Pop();
-                    while (!nodeStack.IsEmpty() && topNode.Right == null)
-                    {
-                        topNode = nodeStack.Pop();
-                    }
+                    topNode = nodeStack.Pop();
                     if (topNode.Right != null)
                     {
-                        root = topNode.Right;
-                        nodeStack.Push(root);
+                        break;
                     }
+                }
+                if (topNode.Right != null)
+                {
+                    topNode = topNode.Right;
+                    nodeStack.Push(topNode);
                 }
             }
         }
@@ -169,50 +174,35 @@ namespace AlgorithmsPrepareCSharp
             Console.WriteLine("Node data type is: {0}, its value is: {1}", root.Data.GetType(), root.Data);
         }
 
-        public static void PostorderTraverseWithoutRecursion(Tree<TItem> root)
+        public static IEnumerable<Tree<TItem>> PostorderTraverseWithoutRecursion(Tree<TItem> root)
         {
             if (root == null)
             {
-                return;
+                yield return null;
             }
 
-            Stack<Tree<TItem>> nodeStack = new Stack<Tree<TItem>>();
-            nodeStack.Push(root);
-            while (!nodeStack.IsEmpty())
+            var s = new Stack<Tree<TItem>>();
+            s.Push(root);
+
+            while (s.Count != 0)
             {
-                if (root.Left != null)
+                var topNode = s.Peek();
+                while (topNode.Left != null)
                 {
-                    root = root.Left;
-                    nodeStack.Push(root);
+                    topNode = topNode.Left;
+                    s.Push(topNode);
                 }
-                else if (root.Right != null)
+                while (s.Count != 0 && (topNode == s.Peek().Right || s.Peek().Right == null))
                 {
-                    root = root.Right;
-                    nodeStack.Push(root);
+                    topNode = s.Pop();
+                    yield return topNode;
                 }
-                else
+                if (s.Count != 0)
                 {
-                    Tree<TItem> topNode = nodeStack.Pop();
-                    while (!nodeStack.IsEmpty() && (topNode.Right == null || root == topNode.Right))
-                    {
-                        root = topNode;
-                        Console.WriteLine("Node data type is: {0}, its value is: {1}", topNode.Data.GetType(), topNode.Data);
-                        topNode = nodeStack.Pop();
-                    }
-                    if (topNode.Right != null && root == topNode.Left)
-                    {
-                        nodeStack.Push(topNode);
-                        root = topNode.Right;
-                        nodeStack.Push(root);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Node data type is: {0}, its value is: {1}", topNode.Data.GetType(), topNode.Data);
-                    }
+                    s.Push(s.Peek().Right);
                 }
             }
         }
-
 
         public static Tree<TItem> ConstructTreeUsingPreAndInOrder(TItem[] preOrder, int preStart, int preEnd,
             TItem[] inOrder, int inStart, int inEnd)

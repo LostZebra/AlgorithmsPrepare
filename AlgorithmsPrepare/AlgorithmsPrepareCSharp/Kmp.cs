@@ -1,50 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AlgorithmsPrepareCSharp
 {
     class Kmp
     {
         private readonly int[] _jumpIndex;
+        private readonly string _pattern;
 
-        public Kmp(String pattern)
+        public Kmp(string pattern)
         {
-            if (String.IsNullOrEmpty(pattern))
+            if (string.IsNullOrEmpty(pattern))
             {
                 throw new NullReferenceException("Pattern null or empty!");
             }
 
-            _jumpIndex = new int[pattern.Length + 1];
-            _jumpIndex[0] = _jumpIndex[1] = 0;
+            this._pattern = pattern;
+
+            _jumpIndex = new int[pattern.Length];
             for (int i = 1; i < pattern.Length; ++i)
             {
-                int j = _jumpIndex[i];
+                int j = _jumpIndex[i - 1];
                 while (j != 0 && pattern[i] != pattern[j])
                 {
-                    j = _jumpIndex[j];
+                    j = _jumpIndex[j - 1];
                 }
-                _jumpIndex[i + 1] = pattern[i] == pattern[j] ? j + 1 : 0;
+                j += pattern[j] == pattern[i] ? 1 : 0;
+                _jumpIndex[i] = j;
             }
         }
 
-        public void FindPattern(String template, String pattern)
+        public IEnumerable<int> FindPattern(string template)
         {
             int j = 0;
             for (int i = 0; i < template.Length; ++i)
             {
-                while (j != 0 && template[i] != pattern[j])
+                while (j > 0 && template[i] != _pattern[j])
                 {
-                    j = _jumpIndex[j];
+                    j = _jumpIndex[j - 1];
                 }
 
-                if (pattern[j] == template[i])
+                if (_pattern[j] == template[i])
                 {
-                    ++j;
+                    j++;
                 }
 
-                if (j == pattern.Length)
+                if (j == _pattern.Length)
                 {
-                    Console.WriteLine("Match found: {0}", i - pattern.Length + 1);
-                    j = 0;
+                    yield return i - _pattern.Length + 1;
+                    j = _jumpIndex[j - 1];
                 }
             }
         }

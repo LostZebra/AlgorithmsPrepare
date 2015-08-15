@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AlgorithmsPrepareCSharp
 {
-    class UtilityAlgorithm
+    public class UtilityAlgorithm
     {
         public static void Swap<T>(IList<T> array, int firstIndex, int secondIndex) where T: struct
         {
@@ -39,6 +39,56 @@ namespace AlgorithmsPrepareCSharp
 
             QuickSort(array, startIndex, firstHigh - 1);
             QuickSort(array, firstHigh + 1, endIndex);
+        }
+
+        public static T[] RemoveDuplicates<T>(T[] array) where T: IComparable<T>
+        {
+            if (array.Length <= 1)
+            {
+                return array;
+            }
+
+            int i = 1;
+            int offset = 0;
+            while (i < array.Length)
+            {
+                if (array[i].Equals(array[i - 1]))
+                {
+                    offset++;
+                }
+                else
+                {
+                    array[i - offset] = array[i];
+                }
+                i++;
+            }
+
+            T[] copyArray = new T[array.Length - offset];
+            Array.Copy(array, copyArray, array.Length - offset);
+            return copyArray;
+        }
+
+        public static T[] RemoveDuplicatesUnsorted<T>(T[] array)
+        {
+            var set = new HashSet<T>();
+            int offset = 0;
+
+            for (int i = 0; i < array.Length; ++i)
+            {
+                if (set.Contains(array[i]))
+                {
+                    offset++;
+                }
+                else
+                {
+                    set.Add(array[i]);
+                    array[i - offset] = array[i];
+                }
+            }
+
+            T[] copyArray = new T[array.Length - offset];
+            Array.Copy(array, copyArray, array.Length - offset);
+            return copyArray;
         }
     }
 }

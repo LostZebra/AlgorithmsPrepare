@@ -3,12 +3,40 @@ using System.Collections.Generic;
 
 namespace AlgorithmsPrepareCSharp
 {
+    public delegate int AsynchronousCaller(int a, int b);
+
     internal class Program
     {
+        public static int Add(int a, int b)
+        {
+            return a + b;
+        }
+
+        /// <summary>
+        /// Demonstration for asynchronous method callback, callback method must have a parameter
+        /// of type IAsyncReult.
+        /// </summary>
+        /// <param name="ar"></param>
+        public static void CallbackMethod(IAsyncResult ar)
+        {
+            /*
+            AsynchronousCaller ac = (ar as AsyncResult)?.AsyncDelegate as AsynchronousCaller;
+            if (ac == null)
+            {
+                return;
+            }
+
+            string state = (string)ar.AsyncState;
+            Console.WriteLine(state);
+
+            int retVal = ac.EndInvoke(ar);
+            Console.WriteLine(retVal);
+            */
+        }
+
         /*
          * LeetCode: Reverse Integer
          */
-
         public static int Reverse(int x)
         {
             if (x == 0) return x;
@@ -39,7 +67,6 @@ namespace AlgorithmsPrepareCSharp
         /*
          * 编程之美：求区间内频率最小值
          */
-
         public static int MinimumFrequency(int[] ori, int l, int r)
         {
             int[] count = new int[ori.Length];
@@ -209,11 +236,8 @@ namespace AlgorithmsPrepareCSharp
             {
                 return a[startIndexA + midA - 1];
             }
-            if (a[startIndexA + midA - 1] < b[startIndexB + midB - 1])
-            {
-                return FindNthElementInArray(a, startIndexA + midA, endIndexA, b, startIndexB, endIndexB, n - midA);
-            }
-            return FindNthElementInArray(a, startIndexA, endIndexA, b, startIndexB + midB, endIndexB, n - midB);
+
+            return a[startIndexA + midA - 1] < b[startIndexB + midB - 1] ? FindNthElementInArray(a, startIndexA + midA, endIndexA, b, startIndexB, endIndexB, n - midA) : FindNthElementInArray(a, startIndexA, endIndexA, b, startIndexB + midB, endIndexB, n - midB);
         }
 
         public static void PrintTopN(string startPoint, int n)
@@ -242,8 +266,8 @@ namespace AlgorithmsPrepareCSharp
 
         internal class Step
         {
-            public string Start { get; private set; }
-            public string Finish { get; private set; }
+            public string Start { get; set; }
+            public string Finish { get; set; }
 
             public Step(string start, string finish)
             {
@@ -254,7 +278,7 @@ namespace AlgorithmsPrepareCSharp
 
         internal class Node
         {
-            public string Id { get; private set; }
+            public string Id { get; set; }
             public Node Next { get; set; }
 
             public Node (string id)
@@ -412,12 +436,165 @@ namespace AlgorithmsPrepareCSharp
             temp.CopyTo(a, start);
         }
 
+        /// <summary>
+        /// This is a demonstration for pass class type by reference. Remove "ref" keyword won't work.
+        /// </summary>
+        /// <param name="s1"></param>
+        /// <param name="s2"></param>
+        public static void SwapStrings(ref string s1, ref string s2)
+        {
+            var temp = s1;
+            s1 = s2;
+            s2 = temp;
+        }
+
+        /*
+        /// <summary>
+        /// This class this a test class for C# 6.0
+        /// </summary>
+        private class Rectangle
+        {
+            public double Width { get; } = 10.0;
+            public double Height { get; } = 15.0;
+
+            public Rectangle()
+            {
+                // Do nothing
+            }
+
+            public Rectangle(double width, double height)
+            {
+                Width = width;
+                Height = height;
+            }
+
+            public double Area() => Width * Height;
+            public double Perimeter() => 2 * (Width + Height);
+        }
+        */
+
+        // Interesting example of Interface.
+        private interface IHasText
+        {
+            string Text { get; }
+        }
+
+        public class Base : IHasText
+        {
+            string IHasText.Text
+            {
+                get
+                {
+                    Console.WriteLine("Get called: Base.IHasText.Text");
+                    return "Base class!";
+                }
+            }
+
+            public string Text
+            {
+                get
+                {
+                    Console.WriteLine("Get called: Base.Text");
+                    // If somehow a derived class inherits from this base class, and invoke the .Text property 'as' a base class type,
+                    // then '(this as IHasText)' will override the type of the base class and replace it with the implemented .Text by
+                    // that derived class, this example illustrates how derived class is able to affect the behavior of its base class
+                    // using 'Interface'.
+                    return (this as IHasText).Text;
+                }
+            }
+        }
+
+        public class Derived : Base, IHasText
+        {
+            public new string Text {
+                get
+                {
+                    Console.WriteLine("Get called: Derived.Text");
+                    return "Derived class";
+                }
+            }
+        }
+
+        /*
+        private class Product
+        {
+            public int Price { get; } = 10;
+            public string Key { get; } = "Product Default";
+
+            public Product()
+            {
+                // Do nothing
+            }
+
+            public Product(int price, string key)
+            {
+                this.Price = price;
+                this.Key = key;
+            }
+        }
+        */
         /*
          * 程序验证入口
          */
-        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
+            //var s = Solution.CreateInstance();
+            var lc = LeetCode.CreateInstance();
+            var result = lc.SearchMatrix(new[,] { {1, 2, 3, 4, 5} }, 0);
+            Console.WriteLine(result.ToString());
+
+            //int threads = Environment.ProcessorCount;
+            //int numCount = 500000000 * 2 / threads;
+
+            //Task[] tasks = new Task[threads];
+
+            //FasterTextWriterUtils fwu = new FasterTextWriterUtils();
+            //MyTextWriter mtw = new MyTextWriter();
+
+            //for (int i = 0; i < threads; ++i)
+            //{
+            //    var iCopy = i;
+            //    int start = -500000000 + numCount * iCopy;
+            //    int end = -500000000 + numCount * (iCopy + 1);
+            //    tasks[i] = Task.Factory.StartNew(() =>
+            //    {
+            //        for (int j = start; j < end; ++j)
+            //        {
+            //            fwu.Write(mtw, j);
+            //        }
+            //    }, TaskCreationOptions.LongRunning); 
+            //}
+
+            //Task.WaitAll(tasks);
+
+            /*
+            var list = new List<Product>
+            {
+                new Product(),
+                new Product(),
+                new Product(12, "Product1"),
+                new Product(12, "Product1"),
+                new Product(13, "Product2"),
+            };
+
+
+            var retList = list.GroupBy(product => product.Key).Select(productGroup => new {productGroup.Key, TotalPrice = productGroup.Sum(product => product.Price)});
+            int total = 0;
+            foreach (var productType in retList)
+            {
+                Console.WriteLine(productType.Key);
+                total += productType.TotalPrice;
+            }
+            Console.WriteLine(total);
+
+            var rect = new Rectangle(20.0, 10.0);
+            Console.WriteLine("The information of this rectangle is:\n" +
+                              $"{nameof(rect)}:{rect.GetType().Name}, {rect.Height}, {rect.Width}, {rect.Area()}, {rect.Perimeter()}");
+            */
+
+            // Demostration for asynchronous method in C#
+            // AsynchronousCaller ac = Add;
+            // ac.BeginInvoke(3, 5, CallbackMethod, null);
         }
     }
 }
